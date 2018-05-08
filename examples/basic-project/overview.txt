@@ -1,0 +1,121 @@
+Protocols -> way to interpret incoming data
+Low level -> binary to characters
+Higher level -> characters forming commands
+Many levels possible
+
+Web = trinity (HTML, CSS, JS)
+
+HTTP (P = Protocol)
+
+5R => 
+Request : client (browser) sends request to server
+Receive : server gets request, decides what to do, does it
+Respond : server sends response to client
+Render : Client does something with response ( Render just visuals, here is whatever)
+Repeat : Do it again as needed/desired/kicked off by "render"
+
+images, binary data (exe, images, music streams, video), HTML, CSS, JS
+
+Stateless = back and forth is without regard to previous back and forths (at the protocol level)
+
+NOTE: After Respond, Server is _no longer involved_.  Only if a new request is made does it get info
+Every request has a reponse, 1:1
+Server can't send to client, only respond (pull, not push) 
+Security has to be backend (server), not frontend (client, browser)
+Convenience is easier on frontend (no request required)
+
+HTML - 
+tags, most open close, can self close as one tag, some just are w/o open close
+
+HTML- structure, content, relationships - semantic
+tag -> element when rendered
+have properties and attributes (attributes have values, properties just are or are not)
+use only attributes defined for that tag, but data-WHATEVER is legit
+
+HTML Note: 
+* Don't use tables for layout
+
+CSS - styling, look, appearance, visuals.  
+  - Uses semantics, structure
+
+Selectors - rules
+
+  tags - all instances
+ 
+  id - one specific element - no naming convention, but prefix for uniqueness is common, use #WHATEVER as selector
+  Using id is easy, but not the practice I recommend because knowing a unique ID for generated content can be difficult
+
+  
+  class - some set of elements that share something in common.  Can have multiple classes, space separated as single string for attribute.  convention: don't name based on resulting appearance.  Use .WHATEVER as selector
+
+  Selectors can combine:
+  .foo = all tags with class "foo", even if there are other classes
+  .foo.bar = all tags with both class "foo" and "bar, regardless of order of the names
+  div.foo = all div tags with class foo, regardless of other classes
+  div#foo = div tag with id foo, won't match if the #foo element was not a div 
+  #foo.bar tag with id foo only if it has class "bar" (regardless of other classes)
+
+  Selectors can nest:
+  .foo .bar = something with class bar that is INSIDE something (descendant) with class foo, even if there are layers inbetween 
+  .foo > .bar = something with class bar that is a direct child of something with class foo
+ 
+ Multiple selectors can apply to a rule
+
+ .foo, div { ... } = all things with class foo, as well as all div tags
+
+ Where?   Inline, in-doc, and separate 
+ Convention: never inline, prefer separate for editing (it may be moved in-doc by programs)
+ When loading as separate, have essential CSS BEFORE content (else Flash Of Unstyled Content FOUC)
+ <link rel="stylesheet" href="path/to/css/file.css"/>
+
+ Relative links are paths for files relative to the location of the current document
+ Absolute paths start from the root
+ You can have domains in the absolute path
+
+  CSS Precedence is 4 rules
+  - inline is most important
+  - !important is second  (Convention: avoid !important) 
+  - Specificity is third ( ID is more specific than class, which is more specific than tag)
+    (Convention: Only be as specific as is appropriate) 
+  - Most recent is tie-breaker (furthest down, most recently loaded)
+
+CSS Notes:
+* Don't use floats for layout
+* Avoid browser/vendor prefixes
+* Don't trust/follow articles online that are >3 years old
+* Don't set explicit widths/heights on "structural" elements
+* don't name your classes for what they look like, name them for what they are
+* Don't assume "it works" is true Working is not the same as Correct
+
+Naming conventions:
+css classes are traditional kebab-case  
+JS variables are traditionally camelCase
+html tags are traditionally lowercase (unless you are microsoft)
+Always assume case matters
+
+Forms
+Action - where to send request (default self)
+method - how to send the request (verb)
+
+GET - default.   Idempotent (sending multiple times doesn't create invalid situation) Query params on URL only
+POST - Convention: "Create".  params send in body (can take from url as well, some servers/frameworks ignore query params)
+
+GET & POST are the only two widely supported by form.
+
+PUT - Convention: "Update (replace)" ( works like POST)
+DELETE - (works like POST)
+PATCH - Convention: "Update (replace parts)" (works like POST) (more recent addition)
+
+Other verbs exist (HEAD, OPTIONS, TRACE), these are by far the most common.
+
+Forms are rarely used to submit data directly anymore.
+Instead they allow data entry, and JS will use the data from the form and send to the server separately.
+
+Servers
+
+Static vs dynamic
+
+Truthy = not falsy
+Falsy = 0, '', NaN, false, undefined, null
+
+

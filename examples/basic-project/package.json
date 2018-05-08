@@ -1,0 +1,25 @@
+{
+  "name": "setup-confirm",
+  "version": "1.0.0",
+  "description": "Small test to make sure there are no permission issues",
+  "main": "list.js",
+  "scripts": {
+    "test": "tape list.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seainfo6250/setup-confirm.git"
+  },
+  "author": "Brett Ritter <swiftone@swiftone.org>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seainfo6250/setup-confirm/issues"
+  },
+  "homepage": "https://github.com/seainfo6250/setup-confirm#readme",
+  "devDependencies": {
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
