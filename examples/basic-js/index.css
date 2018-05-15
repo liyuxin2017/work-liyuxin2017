@@ -1,0 +1,19 @@
+#demo-root { 
+  height: 90vh;
+  width: 100%;
+  background-color: #C0FFEE;
+  position: relative;
+}
+
+.added-box { 
+  height: 50px;
+  width: 50px;
+  background-color: #BADA55;
+  border: 1px solid black;
+  display: inline-block;
+}
+
+.added-box .left:hover,
+.added-box .right:hover { 
+  background-color: #FFDA55;
+}

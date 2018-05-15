@@ -1,0 +1,12 @@
+DOM
+QuerySelector
+function definitions
+variable declarations
+naming
+for loops (for...of)
+static vs dynamic
+callbacks
+event queue/event loop
+little bit of forms (select, input, button) 
+
+
