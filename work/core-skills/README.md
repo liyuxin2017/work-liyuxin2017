@@ -37,7 +37,7 @@
 
 It works when core.html is opened in Chrome (File--Open File)
 
-At first the numbers are listed in boxes that are 20px wide and 20px high with a 1px black border and 2px between the boxes.  The boxes run right-to-left and wrap to lower lines as needed to fit the screen.  The page will have a light blue background, and each numbered box will have a pale green background.
+At first the numbers are listed in boxes that are 20px wide and 20px high with a 1px black border and 2px between the boxes.  The boxes run left-to-right and wrap to lower lines as needed to fit the screen.  The page will have a light blue background, and each numbered box will have a pale green background.
 
 When the "Even" button is clicked, all even numbered boxes will switch to a light red/pink background.  If the Even button is clicked again, the boxes will lose the light-red color.
 
