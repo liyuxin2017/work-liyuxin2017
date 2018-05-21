@@ -1,0 +1,34 @@
+ul.listOfBoxes {
+  list-style-type: none;
+  padding:0px;
+  display:flex;
+  flex-direction:row;
+  flex-wrap: wrap;
+  background-color: #87CEFA;}
+
+li.evenOff {}
+
+li.fiveOff {}
+
+li.number {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    background-color: #98fb98;
+    border: 1px solid black;}
+
+li.evenOn {
+  background-color: #FFC0CB;}
+
+li.fiveOn {
+  background-color: #800080;}
+
+li.tenOn {
+  background-color: #98fb98;
+  border: 1px solid red;}
+
+li.smallFont {
+  font-size: 100%;}
+
+li.largeFont {
+  font-size: 125%;}
