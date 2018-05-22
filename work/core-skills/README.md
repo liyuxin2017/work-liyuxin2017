@@ -22,8 +22,7 @@
 * This file should have the needed rules to allow the page to function (see How it Works below)
 * All color choices are approximate - where this says "light blue" you can choose any particular color that counts as light blue
 
-## J
-
+## JS
 
 * Create a file `core.js`
 * This file should be wrapped in an IIFE and leak nothing to the global variable scope
