@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 3000;
 
-app.use(express.static('./public'));
+app.use(express.static('./chat'));
 
 
 const fakeMessages = [
@@ -13,12 +13,15 @@ const fakeMessages = [
   },
   {
     from: "Bob",
-    text: "Wow, it does!"
+    text: "it does!"
   }
 ];
 
+const userList = [];
+
 app.get('/messages', ( request, response ) => {
-  response.send(JSON.stringify(fakeMessages));
+  const messagesAndUsers = { messages: JSON.stringify(fakeMessages), users: JSON.stringify(userList)};
+  response.send(messagesAndUsers);
 });
 
 app.post('/messages', bodyParser.json(), ( request, response ) => {
@@ -26,5 +29,28 @@ app.post('/messages', bodyParser.json(), ( request, response ) => {
   response.send();
 });
 
-app.listen(PORT, () => console.log(`listening on http://localhost:${PORT}`));
+app.delete('/login', bodyParser.json(), ( request, response ) => {
+  userList.forEach((user, index) => {
+    if (user.user ==request.body.user){
+      userList.splice(index, 1);
+    }
+  });
+  response.send(JSON.stringify(userList));
+  console.log(userList);
+});
 
+app.post('/login', bodyParser.json(), ( request, response ) => {
+  let exist = false;
+  userList.forEach((user) => {
+    if (user.user == request.body.user){
+      exist = true;
+    }
+  });
+  if (!exist) {
+    userList.push( { user: request.body.user } );
+  }
+  response.send(JSON.stringify(userList));
+  console.log(userList);
+});
+
+app.listen(PORT, () => console.log(`listening on http://localhost:${PORT}`));

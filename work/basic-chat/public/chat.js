@@ -1,34 +1,137 @@
-// Chat.js
-
-
 ( function iife() {
 
-  const messages = [];
+  let messages = [];
+
+  let users = [];
 
   const user = 'Me';
 
+  let currentUser = '';
+
+  let intervalCode = 0;
+
   function setupPage() {
     bindSendAction();
+    bindLoginAction();
+    bindLogoutAction();
     getMessageList()
     .then( () => renderMessageList() );
+  }
+  function startPolling() {
+    intervalCode = setInterval(function() {
+      getMessageList()
+      .then( () => renderMessageList() );
+    },"3000");
+  }
+
+  function stopPolling() {
+    clearInterval(intervalCode);
+  }
+
+  function bindLogoutAction() {
+    const button = document.querySelector('.logout-button');
+    button.addEventListener('click', logout);
+  }
+
+  function logout() {
+    const label = document.querySelector('.login-label');
+    label.classList.remove("display-none");
+    document.querySelector('.loadingText').remove();
+    deleteCurrentUser(currentUser, logoutFinished);
+  }
+
+  function logoutFinished() {
+    const sendBtn = document.querySelector('.send-message');
+    sendBtn.disabled = true;
+    const sendInput = document.querySelector('.new-message');
+    sendInput.disabled = true;
+    const loginDiv = document.querySelector('.login-box');
+    loginDiv.classList.remove("display-none");
+    const logoutDiv = document.querySelector('.logout-box');
+    logoutDiv.classList.add("display-none");
+    bindLoginAction();
+    stopPolling();
+  }
+
+  function deleteCurrentUser(user, callback) {
+    fetch('/login', {
+      method: 'DELETE',
+      headers: new Headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ user: user})
+    })
+    .then( () => console.log('logout') );
+    callback();
+  }
+
+  function bindLoginAction() {
+    const button = document.querySelector('.login-button');
+    const input = document.querySelector('.login-input');
+    button.disabled = true;
+    input.addEventListener('keyup', event => {
+      if(input.value.length == 0) {
+        button.disabled = true;
+      }else{
+        button.disabled = false;
+        if(event.key === 'Enter') {
+          login();
+        }
+      }
+    });
+    button.addEventListener('click', login);
+  }
+
+  function login() {
+    const label = document.querySelector('.login-label');
+    const div = document.querySelector('.login-box');
+    const input = document.querySelector('.login-input');
+    const text = input.value;
+    currentUser = text;
+    label.classList.add("display-none");
+    div.innerHTML += '<span class="loadingText">Loading</span>';
+    sendUserToServer(text, loginFinished);
+  }
+
+  function loginFinished() {
+    const sendBtn = document.querySelector('.send-message');
+    sendBtn.disabled = false;
+    const sendInput = document.querySelector('.new-message');
+    sendInput.disabled = false;
+    const loginDiv = document.querySelector('.login-box');
+    loginDiv.classList.add("display-none");
+    const logoutDiv = document.querySelector('.logout-box');
+    logoutDiv.classList.remove("display-none");
+    bindLogoutAction();
+    startPolling();
+  }
+
+  function sendUserToServer(user, callback) {
+    fetch('/login', {
+      method: 'POST',
+      headers: new Headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ user: user})
+    })
+    .then( () => console.log('user sent') );
+    callback();
   }
 
   function getMessageList() {
     return fetch('/messages')
     .then( response => response.json() )
-    .then( json => messages.push( ...json ) )
+    .then( json => {messages = JSON.parse(json.messages); users = JSON.parse(json.users);} )
     .then( () => console.log('get messages done') );
   }
 
   function bindSendAction() {
     const button = document.querySelector('.send-message');
     button.addEventListener('click', sendMessage );
+    button.disabled = true;
     const input = document.querySelector('.new-message');
     input.addEventListener('keypress', event => {
       if(event.key === 'Enter') {
         sendMessage();
       }
     });
+    input.disabled = true;
   }
 
   function sendMessage() {
@@ -55,6 +158,12 @@
       output += `<li class="message"><span class="user">${message.from}</span> <span class="text">${message.text}</span></li>`;
     });
     pageMessages.innerHTML = output;
+    const pageUsers = document.querySelector('.user-list');
+    output = '';
+    users.forEach( user => {
+      output += `<div class="user-login">${user.user}</div>`;
+    });
+    pageUsers.innerHTML = output;
   }
 
   function sendMessageToServer( text, user) {
@@ -68,4 +177,3 @@
 
   setupPage();
 })();
-
