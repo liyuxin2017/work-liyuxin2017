@@ -90,6 +90,8 @@
     startPolling();
     bindLogoutAction();
     bindSendAction();
+    getMessageList()
+    .then( () => renderMessageList() );
     const loginDiv = document.querySelector('.login-box');
     loginDiv.classList.add("display-none");
     const logoutDiv = document.querySelector('.logout-box');
@@ -158,13 +160,19 @@
 
   function renderMessageList() {
     const pageMessages = document.querySelector('.messages');
+    const messagesArea = document.querySelector('.message-area');
     let output = '';
     messages.forEach( message => {
-      output += `<li class="message"><span class="user">${message.from}</span> <span class="text">${message.text}</span></li>`;
+      if (message.from == currentUser){
+        output += `<li class="message"><span class="user currentUser">${message.from}</span> <span class="text currentUser">${message.text}</span></li>`;
+      }else{
+        output += `<li class="message"><span class="user">${message.from}</span> <span class="text">${message.text}</span></li>`;
+      }
     });
     pageMessages.innerHTML = output;
+    messagesArea.scrollTop = 1000;
     const pageUsers = document.querySelector('.user-list');
-    output = '';
+    output = '<div class="user-login">Users</div>';
     users.forEach( user => {
       output += `<div class="user-login">${user.user}</div>`;
     });

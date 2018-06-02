@@ -3,11 +3,14 @@
 }
 
 .login-box {
+  background-color: white;
   padding: 5px;
   border: solid;
   position: absolute;
   left: 40%;
   top: 45%;
+  z-index: 9999;
+  opacity: 100;
 }
 
 .display-none {
@@ -19,16 +22,45 @@
 }
 
 .user-list {
-  width: 100px;
-  height: auto;
-  float: left;
+  position: absolute;
+  width: 15%;
+  height: 100%;
+  overflow: auto;
 }
 
 .main-div {
-  float: left;
-  margin-left: 10px;
+  position: fixed;
+  width: 99%;
+  height: 99%;
+  overflow: auto;
 }
 
 .text {
   margin-left: 10px;
+}
+
+.chat-root {
+  position: absolute;
+  overflow: auto;
+  width: 85%;
+  left: 15%;
+  height: 100%;
+}
+
+.message-area {
+  position: absolute;
+  overflow: auto;
+  height: 75%;
+  width: 100%;
+}
+
+.input-area {
+  position: absolute;
+  top: 80%;
+  height: 20%;
+  width: 100%;
+}
+
+.currentUser {
+  color: LightGrey;
 }
