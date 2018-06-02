@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 3000;
 
-app.use(express.static('./chat'));
+app.use(express.static('./public'));
 
 
 const fakeMessages = [

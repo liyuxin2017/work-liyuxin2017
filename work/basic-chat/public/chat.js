@@ -4,8 +4,6 @@
 
   let users = [];
 
-  const user = 'Me';
-
   let currentUser = '';
 
   let intervalCode = 0;
@@ -41,15 +39,12 @@
   }
 
   function logoutFinished() {
-    const sendBtn = document.querySelector('.send-message');
-    sendBtn.disabled = true;
-    const sendInput = document.querySelector('.new-message');
-    sendInput.disabled = true;
     const loginDiv = document.querySelector('.login-box');
     loginDiv.classList.remove("display-none");
     const logoutDiv = document.querySelector('.logout-box');
     logoutDiv.classList.add("display-none");
     bindLoginAction();
+    bindSendAction();
     stopPolling();
   }
 
@@ -92,16 +87,19 @@
   }
 
   function loginFinished() {
-    const sendBtn = document.querySelector('.send-message');
-    sendBtn.disabled = false;
-    const sendInput = document.querySelector('.new-message');
-    sendInput.disabled = false;
+    startPolling();
+    bindLogoutAction();
+    bindSendAction();
     const loginDiv = document.querySelector('.login-box');
     loginDiv.classList.add("display-none");
     const logoutDiv = document.querySelector('.logout-box');
     logoutDiv.classList.remove("display-none");
-    bindLogoutAction();
-    startPolling();
+    const input = document.querySelector('.new-message');
+    const sendBtn = document.querySelector('.send-message');
+    if (input.value.length != 0){
+      sendBtn.disabled = false;
+    }
+    input.disabled = false;
   }
 
   function sendUserToServer(user, callback) {
@@ -123,22 +121,29 @@
 
   function bindSendAction() {
     const button = document.querySelector('.send-message');
-    button.addEventListener('click', sendMessage );
-    button.disabled = true;
     const input = document.querySelector('.new-message');
-    input.addEventListener('keypress', event => {
-      if(event.key === 'Enter') {
-        sendMessage();
+    button.disabled = true;
+    input.disabled = true;
+    button.addEventListener('click', sendMessage );
+    input.addEventListener('keyup', event => {
+      if(input.value.length == 0) {
+        button.disabled = true;
+      }else{
+        button.disabled = false;
+        if(event.key === 'Enter') {
+          sendMessage();
+        }
       }
     });
-    input.disabled = true;
   }
 
   function sendMessage() {
     const input = document.querySelector('.new-message');
     const text = input.value;
-    send(text, user);
+    send(text, currentUser);
     input.value = '';
+    bindSendAction();
+    input.disabled = false;
   }
 
   function send( text, user) {
