@@ -17,7 +17,7 @@ const fakeMessages = [
   }
 ];
 
-const userList = [];
+let userList = [];
 
 app.get('/messages', ( request, response ) => {
   const messagesAndUsers = { messages: JSON.stringify(fakeMessages), users: JSON.stringify(userList)};
@@ -30,11 +30,7 @@ app.post('/messages', bodyParser.json(), ( request, response ) => {
 });
 
 app.delete('/login', bodyParser.json(), ( request, response ) => {
-  userList.forEach((user, index) => {
-    if (user.user ==request.body.user){
-      userList.splice(index, 1);
-    }
-  });
+  userList = userList.filter( user => user.user !== request.body.user );
   response.send(JSON.stringify(userList));
   console.log(userList);
 });
