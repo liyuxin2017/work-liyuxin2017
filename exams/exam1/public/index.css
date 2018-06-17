@@ -1,0 +1,12 @@
+.button-list-area {
+  display: flex;
+  justify-content: center;
+}
+
+.added-button {
+  width: 30px;
+}
+
+.button-list {
+  list-style: none;
+}
