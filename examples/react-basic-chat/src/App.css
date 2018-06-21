@@ -1,0 +1,38 @@
+* { 
+  box-sizing: border-box;
+}
+
+.app { 
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.display-area { 
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 100%;
+}
+
+.user-list {
+  border-right: 1px solid black;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+}
+
+.message-list { 
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+}
+
+.message .from { 
+  padding-right: 5px;
+}
+
+
+.send-message-wrapper { 
+  padding: 15px;
+  border-top: 1px solid black;
+}

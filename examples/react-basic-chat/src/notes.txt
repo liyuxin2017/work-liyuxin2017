@@ -1,0 +1,18 @@
+1) Convert everything to REact
+- don't put non-view logic into your JSX - keep them separate and import
+- Pass state variables down as props
+- Pass handlers to change state down as props
+2) Display error message in the app.
+
+
+Step 1:
+
+Have Message list, list of active users, and a message input/button to send that doesn't do anything yet all in JSX
+- Remember to have a different file with a .jsx extension for each component
+- Keep your components small
+- import local componants/files starting with "./" otherwise it will look for a library of that name
+- If using a class-based component you much explicitly bind any methods used as a callback that also use "this" 
+- If using a function-based component it is convenient to use object destructuring to get individual passed properties
+- You must use a class-based component if using this.state for that component (but you generally want to limit the number of components that is true for)
+
+
