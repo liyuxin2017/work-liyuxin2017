@@ -1,28 +1,61 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.display-area {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 100%;
 }
 
-.App-title {
-  font-size: 1.5em;
+.user-list {
+  border-right: 1px solid black;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
 }
 
-.App-intro {
-  font-size: large;
+.message-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.from {
+  padding-right: 15px;
+}
+
+
+.send-message-wrapper {
+  padding: 15px;
+  border-top: 1px solid black;
+}
+
+.login-area {
+  background-color: white;
+  padding: 5px;
+  border: solid;
+  position: absolute;
+  left: 40%;
+  top: 45%;
+  z-index: 9999;
+  opacity: 100;
+}
+
+.logout-not-display {
+  display: none;
+}
+
+.my-message {
+  color: #00F;
+}
+
+.message-list {
+  overflow: auto;
 }
