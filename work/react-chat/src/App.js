@@ -134,8 +134,12 @@ class App extends Component {
     this.setState({
       userInProgress: '',
       currentUser: ''
-    });
-  }
+    },
+    () => {
+      if (this.state.currentUser === '') {
+        clearInterval(this.state.timer);
+      }});
+    }
 
   onCheckForSend(e) {
     if( e.key === "Enter" && e.target.value.length !== 0) {
