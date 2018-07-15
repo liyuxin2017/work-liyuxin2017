@@ -1,18 +1,67 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+
+import { login } from './services';
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usernameInProgress: ''
+    };
+    this.onLogin = this.onLogin.bind(this);
+    this.onInputText = this.onInputText.bind(this);
+    this.onCheckForLogin = this.onCheckForLogin.bind(this);
+    this.addStatus = this.addStatus.bind(this);
+    this.clearStatus = this.clearStatus.bind(this);
+  }
+
+  addStatus( status ) {
+    this.setState({
+      status
+    });
+  }
+
+  clearStatus() {
+    this.addStatus('');
+  }
+
+  componentDidMount() {
+  }
+
+  onSend() {
+    login({ username: this.state.usernameInProgress, text: this.state.messageInProgress })
+    .then( this.updateMessageState )
+    .then( this.clearStatus )
+    .catch( err => this.addStatus(`Error sending message, try again later`) );
+    this.setState({
+      messageInProgress: ''
+    });
+  }
+
+  onCheckForSend(e) {
+    if( e.key === "Enter") {
+      this.onLogin();
+    }
+  }
+
+  onInputText(e) {
+    const text = e.target.value;
+    this.setState({
+      usernameInProgress: text
+    });
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="app">
+        <Login
+          onCheckForLogin={this.onCheckForLogin}
+          usernameInProgress={this.state.usernameInProgress}
+          onInputText={this.onInputText}
+          onLogin={this.onLogin}
+        />
       </div>
     );
   }
