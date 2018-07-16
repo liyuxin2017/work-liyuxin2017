@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Login = ({ onCheckForLogin, messageInProgress, onInputText, onLogin }) => {
+const Login = ({onCheckForLogin, userInProgress, onInputUsername, login}) => {
   return (
-    <div className='send-message-wrapper'>
-      <input onChange={onInputText} onKeyUp={onCheckForSend} value={messageInProgress} className='new-message-text'/>
-      <button onClick={onSend} className='send-message'>Send</button>
+    <div className='login-area'>
+      <input onChange={onInputUsername} onKeyUp={onCheckForLogin} value={userInProgress} className='login-username-text'/>
+      <button onClick={login} className='login-button'>Login</button>
     </div>
   );
 };

@@ -1,69 +1,92 @@
 import React, { Component } from 'react';
 import './App.css';
+import Login from './Login';
+import GameListAndNewGame from './GameListAndNewGame'
 
-
-import { login } from './services';
+import { sendUser, deleteUser } from './services';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernameInProgress: ''
+      currentUser: '',
+      users: ['Jane', 'Bob'],
+      userInProgress: '',
     };
-    this.onLogin = this.onLogin.bind(this);
-    this.onInputText = this.onInputText.bind(this);
+    this.login = this.login.bind(this);
+    this.onInputUsername = this.onInputUsername.bind(this);
     this.onCheckForLogin = this.onCheckForLogin.bind(this);
-    this.addStatus = this.addStatus.bind(this);
-    this.clearStatus = this.clearStatus.bind(this);
+
+    this.logout = this.logout.bind(this);
   }
 
-  addStatus( status ) {
+  login() {
     this.setState({
-      status
+      currentUser: this.state.userInProgress
+    });
+    sendUser({ user: this.state.userInProgress });
+    this.setState({
+      userInProgress: ''
     });
   }
 
-  clearStatus() {
-    this.addStatus('');
+  onCheckForLogin(e) {
+    if( e.key === "Enter" && e.target.value.length !== 0) {
+      this.login();
+    }
+  }
+
+  onInputUsername(e) {
+    const user = e.target.value;
+    if ( user.length === 0 ) {
+
+    }
+    this.setState({
+      userInProgress: user
+    });
+  }
+
+  updateUserState(users) {
+    this.setState( {
+      users: users.user
+    });
   }
 
   componentDidMount() {
   }
 
-  onSend() {
-    login({ username: this.state.usernameInProgress, text: this.state.messageInProgress })
-    .then( this.updateMessageState )
-    .then( this.clearStatus )
-    .catch( err => this.addStatus(`Error sending message, try again later`) );
-    this.setState({
-      messageInProgress: ''
-    });
+  componentWillUnmount() {
   }
 
-  onCheckForSend(e) {
-    if( e.key === "Enter") {
-      this.onLogin();
+  logout() {
+    deleteUser({ user: this.state.currentUser })
+    .then( this.updateUserState )
+    this.setState({
+      userInProgress: '',
+      currentUser: ''
+    });
     }
-  }
-
-  onInputText(e) {
-    const text = e.target.value;
-    this.setState({
-      usernameInProgress: text
-    });
-  }
 
   render() {
-    return (
-      <div className="app">
-        <Login
-          onCheckForLogin={this.onCheckForLogin}
-          usernameInProgress={this.state.usernameInProgress}
-          onInputText={this.onInputText}
-          onLogin={this.onLogin}
-        />
-      </div>
-    );
+    if (this.state.currentUser !== '') {
+      return (
+        <div className="app">
+          <GameListAndNewGame/>
+          <button className="logout" onClick={this.logout}>Logout</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="app">
+          <Login
+            onCheckForLogin={this.onCheckForLogin}
+            userInProgress={this.state.userInProgress}
+            onInputUsername={this.onInputUsername}
+            login={this.login}
+            />
+        </div>
+      );
+    }
   }
 }
 

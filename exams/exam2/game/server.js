@@ -5,10 +5,7 @@ const PORT = 4000;
 
 app.use(express.static('./public'));
 
-const messages = [];
-const users = [];
-
-const allMessages = () => ({ users, messages });
+let users = [];
 
 const addActiveUser = user => {
   if( !users.includes(user) ) {
@@ -16,14 +13,20 @@ const addActiveUser = user => {
   }
 };
 
-app.get('/messages', ( request, response ) => {
-  response.send(JSON.stringify(allMessages()));
+const deleteCurrentUser = user => {
+  users = users.filter(function(user, index) {
+    return (user !== user)
+  });
+};
+
+app.post('/login', bodyParser.json(), ( request, response ) => {
+  addActiveUser(request.body.user)
+  response.send(JSON.stringify(users));
 });
 
-app.post('/messages', bodyParser.json(), ( request, response ) => {
-  messages.push( { from: request.body.from, text: request.body.text } );
-  addActiveUser(request.body.from);
-  response.send(JSON.stringify(allMessages()));
+app.delete('/login', bodyParser.json(), ( request, response ) => {
+  deleteCurrentUser(request.body.user);
+  response.send(JSON.stringify(users));
 });
 
 app.listen(PORT, () => console.log(`listening on http://localhost:${PORT}`));
