@@ -5,7 +5,7 @@ const PORT = 4000;
 
 app.use(express.static('./public'));
 
-const games = [];
+let games = [];
 let users = [];
 
 const allGames = () => ({ users, games });
@@ -27,10 +27,17 @@ app.get('/game', ( request, response ) => {
 });
 
 app.post('/game/:gameName', bodyParser.json(), ( request, response ) => {
-  if (!games.includes(request.params.gameName)) {
+  let isSame = false;
+  games.map((game, index) => {
+    if (game.game === request.params.gameName) {
+      response.status(555).send('Same Name!');
+      isSame = true;
+    }
+  })
+  if (!isSame) {
     games.push( { user: request.body.user, game: request.body.game } );
     addActiveUser(request.body.user);
-    response.send(JSON.stringify(allGames()));
+    response.send(JSON.stringify(allGames()));  
   }
 });
 
