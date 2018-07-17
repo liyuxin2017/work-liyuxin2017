@@ -1,6 +1,6 @@
 
 export const getGames = () => {
-  return fetch('/game')
+  return fetch('/game/')
   .then( response => {
     if(response.ok) {
       return response.json();
@@ -10,7 +10,8 @@ export const getGames = () => {
 };
 
 export const sendGame = ({ user, game }) => {
-  return fetch('/game', {
+  const url = '/game/' + game;
+  return fetch(url, {
     method: "POST",
     body: JSON.stringify({ user, game }),
     headers: new Headers({ 'content-type': 'application/json'}),

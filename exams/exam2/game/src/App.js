@@ -102,7 +102,7 @@ class App extends Component {
       this.setState({
         timer: setInterval (()=>{
             getGames()
-            .then( this.updatGameState )
+            .then( this.updateGameState )
             .catch( err => this.addStatus(`Error loading games, try again later`) );
         }, 3000)
       });
