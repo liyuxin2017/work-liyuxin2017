@@ -8,6 +8,36 @@
   height: 100vh;
 }
 
+.display-area {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 100%;
+}
+
+.user-list {
+  border-right: 1px solid black;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+}
+
+.game-list {
+  list-style: none;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+}
+
+.username {
+  padding-right: 15px;
+}
+
+
+.new-game-area {
+  padding: 15px;
+  border-top: 1px solid black;
+}
+
 .login-area {
   background-color: white;
   padding: 5px;
@@ -17,8 +47,4 @@
   top: 45%;
   z-index: 9999;
   opacity: 100;
-}
-
-.logout-not-display {
-  display: none;
 }

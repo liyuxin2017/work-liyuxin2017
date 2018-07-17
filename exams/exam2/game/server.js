@@ -5,7 +5,10 @@ const PORT = 4000;
 
 app.use(express.static('./public'));
 
+const games = [];
 let users = [];
+
+const allGames = () => ({ users, games });
 
 const addActiveUser = user => {
   if( !users.includes(user) ) {
@@ -19,8 +22,18 @@ const deleteCurrentUser = user => {
   });
 };
 
+app.get('/game', ( request, response ) => {
+  response.send(JSON.stringify(allGames()));
+});
+
+app.post('/game', bodyParser.json(), ( request, response ) => {
+  games.push( { user: request.body.user, game: request.body.game } );
+  addActiveUser(request.body.user);
+  response.send(JSON.stringify(allGames()));
+});
+
 app.post('/login', bodyParser.json(), ( request, response ) => {
-  addActiveUser(request.body.user)
+  addActiveUser(request.body.user);
   response.send(JSON.stringify(users));
 });
 
