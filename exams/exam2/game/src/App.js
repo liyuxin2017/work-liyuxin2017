@@ -5,6 +5,7 @@ import GameList from './GameList';
 import NewGame from './NewGame';
 import StatusMessage from './StatusMessage';
 import Login from './Login';
+import TicTacToe from './TicTacToe';
 
 import { getGames, sendGame, sendUser, deleteUser } from './services';
 
@@ -18,7 +19,9 @@ class App extends Component {
       games: [''],
       gameInProgress: '',
       userInProgress: '',
-      timer: null
+      timer: null,
+      inGame: false,
+      movesShown: ['','','','','','','','','']
     };
     this.onSend = this.onSend.bind(this);
     this.onInputText = this.onInputText.bind(this);
@@ -31,6 +34,7 @@ class App extends Component {
     this.onInputUsername = this.onInputUsername.bind(this);
     this.onCheckForLogin = this.onCheckForLogin.bind(this);
     this.startPolling = this.startPolling.bind(this);
+    this.sendMove = this.sendMove.bind(this);
   }
 
   login() {
@@ -104,7 +108,7 @@ class App extends Component {
             getGames()
             .then( this.updateGameState )
             .catch( err => this.addStatus(`Error loading games, try again later`) );
-        }, 3000)
+        }, 500)
       });
     }
   }
@@ -116,7 +120,8 @@ class App extends Component {
     .then( this.clearStatus )
     .catch( err => this.addStatus(`Error sending game, try again later`) );
     this.setState({
-      gameInProgress: ''
+      gameInProgress: '',
+      inGame: true
     });
   }
 
@@ -127,7 +132,8 @@ class App extends Component {
     .catch( err => this.addStatus(`Error logout, try again later`) );
     this.setState({
       userInProgress: '',
-      currentUser: ''
+      currentUser: '',
+      inGame: false
     },
     () => {
       if (this.state.currentUser === '') {
@@ -151,35 +157,49 @@ class App extends Component {
     });
   }
 
+  sendMove(e) {
+    
+  }
+
   render() {
-    if (this.state.currentUser === '') {
+    if (this.state.inGame) {
       return (
-        <div className="app">
-          <Login
-            onCheckForLogin={this.onCheckForLogin}
-            userInProgress={this.state.userInProgress}
-            onInputUsername={this.onInputUsername}
-            login={this.login}
+        <TicTacToe
+          logout={this.logout}
+          moves={this.state.movesShown}
+          sendMove={this.sendMove}
           />
-        </div>
       );
     } else {
-      return (
-        <div className="app">
-          <div className="display-area">
-            <UserList users={this.state.users}/>
-            <GameList games={this.state.games}/>
+      if (this.state.currentUser === '') {
+        return (
+          <div className="app">
+            <Login
+              onCheckForLogin={this.onCheckForLogin}
+              userInProgress={this.state.userInProgress}
+              onInputUsername={this.onInputUsername}
+              login={this.login}
+            />
           </div>
-          <StatusMessage message={this.state.status}/>
-          <NewGame
-            onCheckForSend={this.onCheckForSend}
-            nameInProgress={this.state.gameInProgress}
-            onInputText={this.onInputText}
-            onSend={this.onSend}
-            logout={this.logout}
-          />
-        </div>
-      );
+        );
+      } else {
+        return (
+          <div className="app">
+            <div className="display-area">
+              <UserList users={this.state.users}/>
+              <GameList games={this.state.games}/>
+            </div>
+            <StatusMessage message={this.state.status}/>
+            <NewGame
+              onCheckForSend={this.onCheckForSend}
+              nameInProgress={this.state.gameInProgress}
+              onInputText={this.onInputText}
+              onSend={this.onSend}
+              logout={this.logout}
+            />
+          </div>
+        );
+      }
     }
   }
 }

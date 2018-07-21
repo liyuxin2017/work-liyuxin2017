@@ -48,3 +48,17 @@
   z-index: 9999;
   opacity: 100;
 }
+
+.game-area {
+  width: 300px;
+  height: 300px;
+}
+
+.box {
+  float: left;
+  border: solid;
+  width: 100px;
+  height: 100px;
+  font-size: 80px;
+  text-align: center;
+}
