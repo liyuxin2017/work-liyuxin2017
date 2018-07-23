@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Game = ({ game }) => {
+const Game = ({ game, enterGame }) => {
   return (
     <div className="game">
-      <button>Enter</button>
+      <button className={game.game} onClick={enterGame}>Enter</button>
       <span className="username">{game.user}</span>
       <span className="game-name">{game.game}</span>
     </div>);

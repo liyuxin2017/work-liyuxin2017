@@ -7,21 +7,22 @@ import StatusMessage from './StatusMessage';
 import Login from './Login';
 import TicTacToe from './TicTacToe';
 
-import { getGames, sendGame, sendUser, deleteUser } from './services';
+import { getGames, sendGame, sendUser, deleteUser, sendLastMove, getMoves } from './services';
 
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: '',
-      users: [''],
-      games: [''],
-      gameInProgress: '',
-      userInProgress: '',
-      timer: null,
-      inGame: false,
-      movesShown: ['','','','','','','','','']
+      currentUser : '',
+      users : [''],
+      games : [''],
+      gameInProgress : '',
+      userInProgress : '',
+      timer : null,
+      inGame : '',
+      movesShown : ['','','','','','','','',''],
+      turn : true
     };
     this.onSend = this.onSend.bind(this);
     this.onInputText = this.onInputText.bind(this);
@@ -35,6 +36,7 @@ class App extends Component {
     this.onCheckForLogin = this.onCheckForLogin.bind(this);
     this.startPolling = this.startPolling.bind(this);
     this.sendMove = this.sendMove.bind(this);
+    this.enterGame = this.enterGame.bind(this);
   }
 
   login() {
@@ -89,15 +91,50 @@ class App extends Component {
     });
   }
 
+  updateMoves(move) {
+    let tempMoves = this.state.movesShown;
+    move.moves.forEach((currentMove, index) => {
+      if (move.host === this.state.currentUser) {
+        if (currentMove.user === this.state.currentUser) {
+          tempMoves[parseInt(move.move.substring(7), 10)] = 'x';
+        } else {
+          tempMoves[parseInt(move.move.substring(7), 10)] = 'o';
+        }
+      } else {
+        if (currentMove.user === this.state.currentUser) {
+          tempMoves[parseInt(move.move.substring(7), 10)] = 'o';
+        } else {
+          tempMoves[parseInt(move.move.substring(7), 10)] = 'x';
+        }
+      }
+    });
+    if (move.turn !== this.state.currentUser) {
+      this.setState({
+        turn : false,
+        movesShown : tempMoves
+      });
+    } else {
+      this.setState({
+        turn : true,
+        movesShown : tempMoves
+      });
+    }
+  }
+
   componentDidMount() {
      getGames()
      .then( this.updateGameState )
      .catch( err => this.addStatus(`Error loading games, try again later`) );
+
+     getMoves()
+     .then(this.updateMoves)
+     .catch( err => this.addStatus(`Error moves, try again later`) );
   }
 
   componentWillUnmount() {
     if (this.state.currentUser === '') {
       clearInterval(this.state.timer);
+      clearInterval(this.state.timer2);
     }
   }
 
@@ -108,6 +145,16 @@ class App extends Component {
             getGames()
             .then( this.updateGameState )
             .catch( err => this.addStatus(`Error loading games, try again later`) );
+        }, 3000)
+      });
+    }
+
+    if (this.state.inGame !== '') {
+      this.setState({
+        timer2 : setInterval (()=>{
+          getMoves()
+          .then( this.updateMoves )
+          .catch( err => this.addStatus(`Error move, try again later`) );
         }, 500)
       });
     }
@@ -121,7 +168,7 @@ class App extends Component {
     .catch( err => this.addStatus(`Error sending game, try again later`) );
     this.setState({
       gameInProgress: '',
-      inGame: true
+      inGame: this.state.gameInProgress
     });
   }
 
@@ -133,11 +180,12 @@ class App extends Component {
     this.setState({
       userInProgress: '',
       currentUser: '',
-      inGame: false
+      inGame: ''
     },
     () => {
       if (this.state.currentUser === '') {
         clearInterval(this.state.timer);
+        clearInterval(this.state.timer2);
       }});
     }
 
@@ -158,16 +206,26 @@ class App extends Component {
   }
 
   sendMove(e) {
-    
+    sendLastMove({user : this.state.currentUser, move : e.target.className}, this.state.inGame)
+    .then(this.updateMoves)
+    .catch( err => this.addStatus(`Error move, try again later`) );
+  }
+
+  enterGame(e) {
+    this.setState({
+      inGame: e.target.className
+    });
+    sendGame({ user: this.state.currentUser, game: e.target.className });
   }
 
   render() {
-    if (this.state.inGame) {
+    if (this.state.inGame !== '') {
       return (
         <TicTacToe
           logout={this.logout}
           moves={this.state.movesShown}
           sendMove={this.sendMove}
+          turn={this.state.turn}
           />
       );
     } else {
@@ -187,7 +245,10 @@ class App extends Component {
           <div className="app">
             <div className="display-area">
               <UserList users={this.state.users}/>
-              <GameList games={this.state.games}/>
+              <GameList
+                games={this.state.games}
+                enterGame={this.enterGame}
+              />
             </div>
             <StatusMessage message={this.state.status}/>
             <NewGame

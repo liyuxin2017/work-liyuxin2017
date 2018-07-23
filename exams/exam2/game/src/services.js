@@ -1,4 +1,3 @@
-
 export const getGames = () => {
   return fetch('/game/')
   .then( response => {
@@ -52,5 +51,32 @@ export const deleteUser = ({ user }) => {
     } else {
       throw new Error( response.statusText );
     }
+  });
+};
+
+export const sendLastMove = ({ user, move }, inGame) => {
+  const url = '/game/' + inGame;
+  return fetch(url, {
+    method: "PUT",
+    body: JSON.stringify({ user, move }),
+    headers: new Headers({ 'content-type': 'application/json'}),
+  })
+  .then( response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error( response.statusText );
+    }
+  });
+};
+
+export const getMoves = (inGame) => {
+  const url = '/game/' + inGame;
+  return fetch(url)
+  .then( response => {
+    if(response.ok) {
+      return response.json();
+    }
+    throw new Error( response.statusText );
   });
 };
