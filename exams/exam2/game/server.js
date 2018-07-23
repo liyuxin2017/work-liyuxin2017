@@ -9,6 +9,24 @@ let games = [];
 let users = [];
 let moves = [];
 
+
+const isContained = (aa, bb) => {
+  if (!(aa instanceof Array)||!(bb instanceof Array)||((aa.length < bb.length))) {
+		return false;
+	}
+  let bbIndex = 0;
+  aa.forEach((move, index) => {
+    if (move === bb[bbIndex]) {
+      bbIndex++;
+    }
+  });
+  if (bbIndex === 3) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const allGames = () => ({ users, games });
 
 const addActiveUser = user => {
@@ -21,6 +39,42 @@ const deleteCurrentUser = user => {
   users = users.filter(function(user, index) {
     return (user !== user)
   });
+};
+
+const findWinner = (moves, host, guest) => {
+  const winCondition = [
+    ['box box0', 'box box1', 'box box2'],
+    ['box box3', 'box box4', 'box box5'],
+    ['box box6', 'box box7', 'box box8'],
+    ['box box0', 'box box3', 'box box6'],
+    ['box box1', 'box box4', 'box box7'],
+    ['box box2', 'box box5', 'box box8'],
+    ['box box0', 'box box4', 'box box8'],
+    ['box box2', 'box box4', 'box box6']
+  ];
+  let hostMoves = [];
+  let guestMoves = [];
+  let winner = '';
+  moves.forEach((move, index) => {
+    if (move.user === host) {
+      hostMoves.push(move.move);
+    } else {
+      guestMoves.push(move.move);
+    }
+  });
+  hostMoves.sort();
+  guestMoves.sort();
+  winCondition.forEach((oneCondition, index) => {
+    if (isContained(hostMoves, oneCondition)) {
+      winner = host;
+    }});
+
+  winCondition.forEach((oneCondition, index) => {
+    if (isContained(guestMoves, oneCondition)) {
+      winner = guest;
+    }});
+
+  return winner;
 };
 
 app.get('/game', ( request, response ) => {
@@ -52,7 +106,8 @@ app.post('/game/:gameName', bodyParser.json(), ( request, response ) => {
       turn : request.body.user,
       host : request.body.user,
       guest : '',
-      moves : []
+      moves : [],
+      winner : ''
     });
     response.send(JSON.stringify(allGames()));
   }
@@ -76,6 +131,11 @@ app.put('/game/:gameName', bodyParser.json(), ( request, response ) => {
         move.turn = move.guest;
       } else {
         move.turn = move.host;
+      }
+      console.log(findWinner(move.moves, move.host, move.guest));
+      move.winner = findWinner(move.moves, move.host, move.guest);
+      if (move.winner !== '') {
+        move.turn = '';
       }
       response.send(JSON.stringify(move));
     }
