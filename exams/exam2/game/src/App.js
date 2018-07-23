@@ -7,7 +7,7 @@ import StatusMessage from './StatusMessage';
 import Login from './Login';
 import TicTacToe from './TicTacToe';
 
-import { getGames, sendGame, sendUser, deleteUser, sendLastMove, getMoves } from './services';
+import { getGames, sendGame, sendUser, deleteUser, sendLastMove, getMoves, deleteMove } from './services';
 
 
 class App extends Component {
@@ -22,7 +22,8 @@ class App extends Component {
       timer : null,
       inGame : '',
       movesShown : ['','','','','','','','',''],
-      turn : true
+      turn : true,
+      winner : ''
     };
     this.onSend = this.onSend.bind(this);
     this.onInputText = this.onInputText.bind(this);
@@ -120,6 +121,23 @@ class App extends Component {
         movesShown : tempMoves
       });
     }
+    if (move.winner !== '') {
+      let lastGame = this.state.inGame;
+      if (move.winner === this.state.currentUser) {
+        this.setState({winner : 'you win!'});
+      } else {
+        this.setState({winner : 'you lose!'});
+      }
+        this.setState({
+          inGame : ''
+        });
+      deleteMove(lastGame)
+      .then(() => {
+        this.setState({
+          winner : ''
+        });
+      });
+    }
   }
 
   componentDidMount() {
@@ -152,9 +170,11 @@ class App extends Component {
 
     this.setState({
       timer2 : setInterval (()=>{
-        getMoves(this.state.inGame)
-        .then( this.updateMoves )
-        .catch( err => this.addStatus(`wait to start`) );
+        if (this.state.inGame !== '') {
+          getMoves(this.state.inGame)
+          .then( this.updateMoves )
+          .catch( err => this.addStatus(`wait to start`) );
+        }
       }, 500)
     });
   }
@@ -243,6 +263,7 @@ class App extends Component {
       } else {
         return (
           <div className="app">
+            <div className="game-result">{this.state.winner}</div>
             <div className="display-area">
               <UserList users={this.state.users}/>
               <GameList

@@ -80,3 +80,19 @@ export const getMoves = (inGame) => {
     throw new Error( response.statusText );
   });
 };
+
+export const deleteMove = ({ inGame }) => {
+  const url = '/game/' + inGame;
+  return fetch(url, {
+    method: "DELETE",
+    body: JSON.stringify({inGame}),
+    headers: new Headers({ 'content-type': 'application/json'}),
+  })
+  .then( response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error( response.statusText );
+    }
+  });
+};

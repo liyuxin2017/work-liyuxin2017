@@ -9,7 +9,6 @@ let games = [];
 let users = [];
 let moves = [];
 
-
 const isContained = (aa, bb) => {
   if (!(aa instanceof Array)||!(bb instanceof Array)||((aa.length < bb.length))) {
 		return false;
@@ -38,6 +37,14 @@ const addActiveUser = user => {
 const deleteCurrentUser = user => {
   users = users.filter(function(user, index) {
     return (user !== user)
+  });
+
+  games = games.filter((game, index) => {
+    return (game.user !== user)
+  });
+
+  moves = moves.filter((move, index) => {
+    return (move.host !== user && move.guest !== user)
   });
 };
 
@@ -132,7 +139,6 @@ app.put('/game/:gameName', bodyParser.json(), ( request, response ) => {
       } else {
         move.turn = move.host;
       }
-      console.log(findWinner(move.moves, move.host, move.guest));
       move.winner = findWinner(move.moves, move.host, move.guest);
       if (move.winner !== '') {
         move.turn = '';
@@ -147,6 +153,15 @@ app.get('/game/:gameName', ( request, response ) => {
     if (move.game === request.params.gameName) {
       response.send(JSON.stringify(move));
     }
+  });
+});
+
+app.delete('/game/:gameName', ( request, response ) => {
+  games = games.filter((game, index) => {
+    return (game.game !== request.params.gameName);
+  });
+  moves = moves.filter((move, index) => {
+    return (move.game !==  request.params.gameName);
   });
 });
 
