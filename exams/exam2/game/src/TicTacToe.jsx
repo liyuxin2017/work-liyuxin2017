@@ -1,9 +1,9 @@
 import React from 'react';
 
-const TicTacToe = ({ logout, moves, sendMove, turn }) => {
+const TicTacToe = ({ logout, moves, sendMove, turn, movesShown }) => {
   const boxes = moves.map((move, index) => {
     const boxClassName = "box box" + index;
-    if (turn) {
+    if (turn && movesShown[index] === '') {
       return (
         <div className={boxClassName} onClick={sendMove} key={index}>{move}</div>
       );
@@ -13,7 +13,7 @@ const TicTacToe = ({ logout, moves, sendMove, turn }) => {
       );
     }
   });
-  
+
   return (
     <div>
       <div className="game-area">

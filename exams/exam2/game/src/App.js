@@ -37,6 +37,7 @@ class App extends Component {
     this.startPolling = this.startPolling.bind(this);
     this.sendMove = this.sendMove.bind(this);
     this.enterGame = this.enterGame.bind(this);
+    this.updateMoves = this.updateMoves.bind(this);
   }
 
   login() {
@@ -96,15 +97,15 @@ class App extends Component {
     move.moves.forEach((currentMove, index) => {
       if (move.host === this.state.currentUser) {
         if (currentMove.user === this.state.currentUser) {
-          tempMoves[parseInt(move.move.substring(7), 10)] = 'x';
+          tempMoves[parseInt(currentMove.move.substring(7), 10)] = 'x';
         } else {
-          tempMoves[parseInt(move.move.substring(7), 10)] = 'o';
+          tempMoves[parseInt(currentMove.move.substring(7), 10)] = 'o';
         }
       } else {
         if (currentMove.user === this.state.currentUser) {
-          tempMoves[parseInt(move.move.substring(7), 10)] = 'o';
+          tempMoves[parseInt(currentMove.move.substring(7), 10)] = 'o';
         } else {
-          tempMoves[parseInt(move.move.substring(7), 10)] = 'x';
+          tempMoves[parseInt(currentMove.move.substring(7), 10)] = 'x';
         }
       }
     });
@@ -126,7 +127,7 @@ class App extends Component {
      .then( this.updateGameState )
      .catch( err => this.addStatus(`Error loading games, try again later`) );
 
-     getMoves()
+     getMoves(this.state.inGame)
      .then(this.updateMoves)
      .catch( err => this.addStatus(`Error moves, try again later`) );
   }
@@ -149,15 +150,13 @@ class App extends Component {
       });
     }
 
-    if (this.state.inGame !== '') {
-      this.setState({
-        timer2 : setInterval (()=>{
-          getMoves()
-          .then( this.updateMoves )
-          .catch( err => this.addStatus(`Error move, try again later`) );
-        }, 500)
-      });
-    }
+    this.setState({
+      timer2 : setInterval (()=>{
+        getMoves(this.state.inGame)
+        .then( this.updateMoves )
+        .catch( err => this.addStatus(`wait to start`) );
+      }, 500)
+    });
   }
 
 
@@ -226,6 +225,7 @@ class App extends Component {
           moves={this.state.movesShown}
           sendMove={this.sendMove}
           turn={this.state.turn}
+          movesShown={this.state.movesShown}
           />
       );
     } else {
