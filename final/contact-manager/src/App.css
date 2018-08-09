@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  font-size: 25px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.login-area {
+  background-color: white;
+  padding: 5px;
+  border: solid;
+  position: absolute;
+  left: 40%;
+  top: 45%;
+  z-index: 9999;
+  opacity: 100;
+}
+
+.new-contact-area {
+  position:fixed;
+  top: 20%;
+  right: 10%;
+}
+
+.contact-record {
+  margin: 5px;
+}
+
+.contact-list-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100%;
+  border-right: 3px solid black;
+  width: 50%
+}
+
+.contact-list {
+  overflow: auto;
+}
+
+.new-contact-area-font {
+  font-size: 100%;
+  margin: 5px;
+}
