@@ -25,6 +25,12 @@ const addContact = (contact) => {
   contact.index = contactIndex;
   contactIndex++;
   contactList.push(contact);
+  contactList.sort((a, b) => {
+    if (a.firstName.toString().toLowerCase() === b.firstName.toString().toLowerCase()) {
+      return (a.lastName.toString().toLowerCase() < b.lastName.toString().toLowerCase() ? -1 : 1);
+    } else {
+      return (a.firstName.toString().toLowerCase() < b.firstName.toString().toLowerCase() ? -1 : 1);
+    }});
 };
 
 const selectContact = (currentUser) => {
