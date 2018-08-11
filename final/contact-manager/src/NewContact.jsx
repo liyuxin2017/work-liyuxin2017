@@ -2,7 +2,7 @@ import React from 'react';
 
 const NewContact = ({firstNameInProgress, lastNameInProgress, phoneInProgress, emailInProgress,
   logout, onInputFirstName, onInputLastName, onInputPhone, onInputEmail,
-  onSendNewContact, clearNewContact, onCheckForNewContact}) => {
+  onSendNewContact, clearNewContact, onCheckForNewContact, notification}) => {
   return (
     <div className='new-contact-area'>
       <input className='first-name-text new-contact-area-font' onChange={onInputFirstName} onKeyUp={onCheckForNewContact} placeholder='First name' value={firstNameInProgress}/><br/>
@@ -12,6 +12,7 @@ const NewContact = ({firstNameInProgress, lastNameInProgress, phoneInProgress, e
       <button className='submit-button new-contact-area-font' onClick={onSendNewContact}>Submit</button>
       <button className='clear-button new-contact-area-font' onClick={clearNewContact}>Clear</button>
       <button onClick={logout} className='logout-button new-contact-area-font'>Logout</button>
+      <div className='notification'>{notification}</div>
     </div>
   );
 };

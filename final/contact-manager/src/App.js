@@ -20,7 +20,8 @@ class App extends Component {
       timer : null,
       currentFocusContact : '',
       contactList : [],
-      contactIndexEdited : ''
+      contactIndexEdited : '',
+      notification : ''
     };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
@@ -39,6 +40,18 @@ class App extends Component {
     this.onCheckForNewContact = this.onCheckForNewContact.bind(this);
     this.isNewContactValid = this.isNewContactValid.bind(this);
     this.onEditContact = this.onEditContact.bind(this);
+    this.setNotification = this.setNotification.bind(this);
+    this.clearNotification = this.clearNotification.bind(this);
+  }
+
+  setNotification(notification) {
+    this.setState({
+      notification : notification
+    });
+  }
+
+  clearNotification() {
+    this.setNotification('');
   }
 
   login() {
@@ -46,9 +59,11 @@ class App extends Component {
       currentUser: this.state.userInProgress
     });
     sendUser({ user: this.state.userInProgress })
-    .then( this.startPolling );
+    .then( this.startPolling )
+    .then(this.clearNotification)
+    .catch( err => this.setNotification(`Error login, try again later`) );
     this.setState({
-      userInProgress: ''
+      userInProgress: '',
     });
   }
 
@@ -73,7 +88,8 @@ class App extends Component {
       this.setState({
         timer: setInterval (()=>{
           getContactList(this.state.currentUser)
-          .then(this.updateContactList);
+          .then(this.updateContactList)
+          .catch( err => this.setNotification(`Error loading contacts, try again later`) );
         }, 1000)
       });
     }
@@ -124,6 +140,7 @@ class App extends Component {
       emailInProgress: text
     });
   }
+
   clearNewContact() {
     this.setState({
       firstNameInProgress: '',
@@ -143,9 +160,13 @@ class App extends Component {
         phone: this.state.phoneInProgress,
         email: this.state.emailInProgress
       })
-      .then(this.clearNewContact);
+      .then(this.clearNewContact)
+      .then(this.clearNotification)
+      .catch( err => this.setNotification(`Error send new contact, try again later`) );
       deleteContact(this.state.contactIndexEdited, this.state.currentUser)
-      .then(this.updateContactList);
+      .then(this.updateContactList)
+      .then(this.clearNotification)
+      .catch( err => this.setNotification(`Error send new contact, try again later`) );
       this.setState({
         currentFocusContact : ''
       });
@@ -166,7 +187,9 @@ class App extends Component {
 
   onDeleteContact(e) {
     deleteContact(e.target.getAttribute('contact-index'), this.state.currentUser)
-    .then(this.updateContactList);
+    .then(this.updateContactList)
+    .then(this.clearNotification)
+    .catch( err => this.setNotification(`Error delete contact, try again later`) );
     this.setState({
       currentFocusContact : ''
     });
@@ -174,6 +197,8 @@ class App extends Component {
 
   isNewContactValid() {
     if (this.state.firstNameInProgress === '' && this.state.lastNameInProgress === '') {
+      const notification = 'First and last name cannot be both empty!'
+      this.setNotification(notification);
       return false;
     }
     return true;
@@ -235,6 +260,7 @@ class App extends Component {
             onSendNewContact={this.onSendNewContact}
             clearNewContact={this.clearNewContact}
             onCheckForNewContact={this.onCheckForNewContact}
+            notification={this.state.notification}
           />
         </div>
       );
